@@ -1,0 +1,10 @@
+{
+  "id": "selected-text-search",
+  "name": "Selected Text Search",
+  "version": "2.1.0",
+  "minAppVersion": "1.4.0",
+  "description": "Search selected text in a grouped glossary sidebar.",
+  "author": "xionghaizimao",
+  "authorUrl": "https://github.com/xionghaizimao",
+  "isDesktopOnly": false
+}

@@ -1,0 +1,5 @@
+.DS_Store
+Thumbs.db
+data.json
+*.bak-*
+node_modules/
