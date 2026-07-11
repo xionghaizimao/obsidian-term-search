@@ -283,10 +283,28 @@ class QuickSearchModal extends Modal {
     card.createDiv({ text: result.summary || "暂无简短定义", cls: "sts-hover-summary" });
     if (result.example) card.createDiv({ text: `示例：${result.example}`, cls: "sts-hover-example" });
     const rect = row.getBoundingClientRect();
+    const modalRect = this.modalEl.getBoundingClientRect();
     const width = 300;
-    const left = rect.right + 10 + width <= window.innerWidth ? rect.right + 10 : rect.left - width - 10;
-    card.style.left = `${Math.max(8, left)}px`;
-    card.style.top = `${Math.min(rect.top, window.innerHeight - card.offsetHeight - 8)}px`;
+    const gap = 10;
+    const margin = 8;
+    const height = card.offsetHeight;
+    let left;
+    let top;
+    if (modalRect.right + gap + width <= window.innerWidth - margin) {
+      left = modalRect.right + gap;
+      top = Math.max(margin, Math.min(rect.top, window.innerHeight - height - margin));
+    } else if (modalRect.left - gap - width >= margin) {
+      left = modalRect.left - gap - width;
+      top = Math.max(margin, Math.min(rect.top, window.innerHeight - height - margin));
+    } else {
+      card.style.width = `${Math.min(width, window.innerWidth - margin * 2)}px`;
+      left = Math.max(margin, (window.innerWidth - card.offsetWidth) / 2);
+      top = modalRect.bottom + gap + height <= window.innerHeight - margin
+        ? modalRect.bottom + gap
+        : Math.max(margin, modalRect.top - gap - height);
+    }
+    card.style.left = `${left}px`;
+    card.style.top = `${top}px`;
     this.hoverCard = card;
   }
 
@@ -414,7 +432,7 @@ module.exports = class SelectedTextSearchPlugin extends Plugin {
       .sts-quick-module, .sts-quick-type { color: var(--text-muted); font-size: var(--font-ui-smaller); }
       .sts-quick-match { background: var(--background-modifier-border); border-radius: 10px; color: var(--text-muted); font-size: var(--font-ui-smaller); padding: 1px 7px; }
       .sts-quick-footer { margin-top: 10px; width: 100%; }
-      .sts-quick-hover { background: var(--background-primary); border: 1px solid var(--background-modifier-border); border-radius: var(--radius-m); box-shadow: var(--shadow-l); max-height: 400px; overflow: hidden; padding: 12px; pointer-events: none; position: fixed; width: 300px; z-index: var(--layer-popover); }
+      .sts-quick-hover { background: var(--background-primary); border: 1px solid var(--background-modifier-border); border-radius: var(--radius-m); box-shadow: var(--shadow-l); max-height: 400px; overflow: hidden; padding: 12px; pointer-events: none; position: fixed; width: 300px; z-index: 1001; }
       .sts-hover-title { font-weight: 600; margin-bottom: 4px; }
       .sts-hover-meta { color: var(--text-muted); font-size: var(--font-ui-smaller); margin-bottom: 8px; }
       .sts-hover-summary, .sts-hover-example { display: -webkit-box; line-height: 1.45; overflow: hidden; -webkit-box-orient: vertical; }
